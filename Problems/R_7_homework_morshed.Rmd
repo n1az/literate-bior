@@ -1,0 +1,84 @@
+---
+title: "Homework 7"
+author: "Stefan Konigorski"
+date: "November 30, 2022"
+output:
+  html_document: default
+---
+
+Download this R Markdown file, save it on your computer, and perform all the below tasks by inserting your answer in text or by inserting R chunks below. After you are done, upload this file with your solutions on Moodle.
+
+## Preparations
+
+Load KiGGS data:
+
+```{r}
+dat_link <- url("https://www.dropbox.com/s/pd0z829pv2otzqt/KiGGS03_06.RData?dl=1")
+load(dat_link)
+kiggs <- KiGGS03_06
+```
+
+## Exercise 1: Multiple imputation
+
+a) In the KiGGS dataset, choose 2 metric variables of your choice.
+```{r}
+##  Choosing 2 metric variables
+x = kiggs$wKiGGS
+y = kiggs$wKGSLab
+```
+
+b) Compute the correlation between these two variables
+
+### here we will compute correlation between them.
+```{r}
+cor_res <- cor.test(x,y, method = "pearson", use = "complete.obs")
+cor_res
+```
+### From the p-value we can see that the variables are significantly correlated with positive correlation coefficient of 0.864. We can generate a plot to visualize it.
+
+```{r}
+# plot
+library(ggstatsplot)
+ggscatterstats(data = kiggs, x = wKiGGS, y = wKGSLab)
+```
+
+
+c) Perform a multiple imputation using the mice function with the 'pmm' method and otherwise default settings.
+```{r}
+dat <- data.frame(kig = kiggs$wKiGGS, 
+                  kiglab = kiggs$wKGSLab)
+
+# using vim to visualize the missing value pattern
+library(VIM)
+aggr(dat, col = c('skyblue','black'), numbers = TRUE, sortVars = TRUE, labels = names(dat), cex.axis = 0.7, gap = 3, ylab = c("Histogram of missing data", "Pattern"))
+
+```
+
+
+```{r}
+library(mice)
+
+# imputation of missing values, generating 5 imputed data sets
+impData <- mice(dat, m = 5, maxit = 5, meth = 'pmm', seed = 404)
+?mice
+
+```
+
+```{r}
+# Summary of the imputation
+summary(impData)
+```
+
+### So there are no missing values in the 1st variable but there are many missing values in the other one which is now imputed.
+
+```{r}
+# Visualization of the distribution of the imputed variable wkgslab
+mice::densityplot(impData)
+```
+
+d) Compute the correlation again on the multiple imputed datasets.
+
+```{r}
+with(impData, cor.test(kig, kiglab, method = "pearson"))
+```
+### Here we can see that the correlation is not changed much in the imputed datasets. This might happen as one of the variable has no missing values.

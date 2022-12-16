@@ -1,0 +1,148 @@
+---
+title: "Homework 5"
+author: "Stefan Konigorski"
+date: "November 16, 2022"
+output:
+  html_document: default
+---
+
+Download this R Markdown file, save it on your computer, and perform all the below tasks by inserting your answer in text or by inserting R chunks below. After you are done, upload this file with your solutions on Moodle.
+
+## Exercise 1: Probability distributions
+
+Explore the functions *rnorm*, *rt*, *runif*, *rbinom* in R that allow you to generate random numbers from the normal, t-, uniform, and binomial distribution. Compute them with different values, and inspect histograms to visualize their distribution.
+```{r}
+set.seed(404)
+dfX <- rnorm(1000,0,1)
+var(dfX)
+
+var_y <- var_z <- NULL
+for(i in 1:2000){
+  dfX_s <- sample(dfX, size = 100, replace = FALSE)
+  var_y[i] <- var(dfX_s)*(100-1)/100
+  var_z[i] <- var(dfX_s)
+}
+
+# Results in terms of mean
+mean(var_y)
+mean(var_z)
+
+# Visualizing the histogram
+par(mfrow = c(1,2))
+hist(var_y)
+hist(var_z)
+```
+## Binomial Distribution
+```{r}
+set.seed(404)
+B <- rbinom(1000, 90, 0.9) # with size = 20, prob=0.2
+var(B)
+
+emean <- emedian <- NULL # estimated mean and median initiating
+for(i in 1:2000){
+  B_sam <- sample(B, size = 100, replace = FALSE)
+  emean[i] <- mean(B_sam)
+  emedian[i] <- median(B_sam)
+}
+
+# mean of variance of estimated mean and median
+mean((emean - mean(B))^2)
+mean((emedian - mean(B))^2)
+
+var(emean)
+var(emedian)
+
+# Visualizing histogram
+par(mfrow = c(1,2))
+hist(emean)
+hist(emedian)
+```
+##t-distribution
+```{r}
+set.seed(404)
+size = 20000
+T <- rt(n=size, df=size-1)
+var(T)
+hist(T, breaks = 'Scott', freq = FALSE)
+
+emean_t <- emedian_t <- NULL
+for(i in 1:2000){
+  T_sam <- sample(T, size = 100, replace = FALSE)
+  emean_t[i] <- mean(T_sam)
+  emedian_t[i] <- median(T_sam)
+}
+#results
+mean((emean_t - mean(T))^2)
+mean((emedian_t - mean(T))^2)
+
+#visualization
+par(mfrow = c(1,2))
+hist(emean_t)
+hist(emedian_t)
+
+```
+## Continuous Uniform Distribution
+```{r}
+set.seed(404)
+# generating random variables
+C <- runif(20000, min = -1, max = 1)
+hist(C, freq = FALSE, xlab = 'x', density = 90)
+
+emean_c <- emedian_c <- NULL
+for(i in 1:1500){
+  C_sam <- sample(C, size = 100, replace = FALSE)
+  emean_c[i] <- mean(C_sam)
+  emedian_c[i] <- median(C_sam)
+}
+#results
+mean((emean_c - mean(C))^2)
+mean((emedian_c - mean(C))^2)
+
+#visualization
+par(mfrow = c(1,2))
+hist(emean_c)
+hist(emedian_c)
+```
+
+## Exercise 2: Odds ratio
+
+In the KiGGS dataset:
+
+a) Compute the proportion of mothers that had hypertension during pregnancy. Use the variable 'e0155' which has values "Ja" (yes), "Nein" (No) and "Weiß nicht" (don't know).
+```{r}
+dat_link <- url("https://www.dropbox.com/s/pd0z829pv2otzqt/KiGGS03_06.RData?dl=1")
+load(dat_link)
+
+dat <- KiGGS03_06
+
+library(dplyr)
+with_hyper <- dat %>% filter(e0155 == "Ja") %>% nrow()
+without_na <- sum(!is.na(dat$e0155))
+proportion <- (with_hyper/without_na)
+proportion
+```
+b) Create a new variable that is 0 or 1 depending on whether the children are small or tall (think of a good way how to do this) based on the variable 'groeB' (body height). 
+```{r}
+
+dat$groeB[is.na(dat$groeB)]= 0
+m <- mean(dat$groeB)
+dat$v <- ifelse(dat$groeB < m, 0, 1)
+
+```
+c) Then compute the odds ratio that the mother had hypertension during pregnancy (e0155 == "Ja" (yes), versus e0155 == "Nein" (no)) of tall vs. small children.
+```{r}
+dat$groeB[is.na(dat$groeB)]= 0
+m <- mean(dat$groeB)
+dat$height <- ifelse(dat$groeB < m, 0, 1)
+
+table(dat$height == 0 & dat$e0155 == "Ja")
+
+```
+
+## Exercise 3 (optional): Confidence intervals
+
+Look at the hypertension variable from exercise 2. Use the binom::binom.confint and the questionr::odds.ratio functions to compute the estimates of the proportion and odds ratio as well as their confidence intervals. (you need to download and load these packages at first).
+
+## Exercise 4 (optional, advanced): Bootstrap
+
+Adapt the bootstrap implementation in R_5b_estimation_bootstrap.Rmd to compute the bootstrap estimate of the standard error of the variance of a normally-distributed and a t-distributed variable. Are they similar?

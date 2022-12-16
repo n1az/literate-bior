@@ -1,0 +1,105 @@
+---
+title: "Homework 6"
+author: "Stefan Konigorski"
+date: "November 23, 2022"
+output:
+  html_document: default
+---
+
+Download this R Markdown file, save it on your computer, and perform all the below tasks by inserting your answer in text or by inserting R chunks below. After you are done, upload this file with your solutions on Moodle.
+
+## Exercise 1: Statistical tests
+
+a) In the KiGGS dataset, perform a 2-sample t-test for paired samples (i.e. dependent samples) for the two variables 'sys1' and 'sys2'. Interpret the results.
+
+```{r, warning=FALSE, message=FALSE}
+# loading all the necessary libraries
+library(ggplot2)
+library(dplyr)
+
+# importing dataset
+dat_link <- url("https://www.dropbox.com/s/pd0z829pv2otzqt/KiGGS03_06.RData?dl=1")
+load(dat_link)
+
+dat <- KiGGS03_06
+
+# creating subset for sys1 and sys2
+x = matrix(dat$sys1)
+y = matrix(dat$sys2)
+
+```
+
+## Now we need to replace the NA values before computing t-test
+
+
+```{r}
+x <- x %>% replace(is.na(.), 0)
+y <- y %>% replace(is.na(.), 0)
+```
+
+
+```{r}
+# Compute t-test
+
+res <- t.test(as.integer(x), as.integer(y), paired = TRUE)
+res
+```
+### *Here the p-value of the test is less than 2.2e-{16},<br /> which is less than the significance level alpha = 0.05.<br /> We can then reject null hypothesis and conclude that<br /> the sys1 is significantly different from the sys2 with a p-value < 2.2e-{16}.<br /> In other words, we do have sufficient evidence to say that the mean scores between the sys1 and sys2 groups variable is statistically significantly different.<br /> In addition, our 95% confidence interval says that we are “95% confident” that the true mean difference between the two groups is between 1.734622 and 2.058122. So we can reject the null hypothesis here.*
+
+b) In the KiGGS dataset, select one metric and one binary variable (or create one) and perform a 2-sample t-test. Then do a Mann-Whitney U-test with the same variables, explore the function to do this, and compare the results to the t-test.
+
+```{r}
+# taking one metric variable m and one binary variable n
+m = matrix(dat$wKiGGS)
+n = matrix(dat$sex)
+
+
+```
+## Now we need to replace the NA values before computing t-test
+
+
+```{r}
+m <- m %>% replace(is.na(.), 0)
+n <- n %>% replace(is.na(.), 0)
+```
+### Creating dataframe with two variable
+
+```{r}
+my_data <- data.frame( 
+                metri = m,
+                binar = n
+                )
+```
+
+
+### Now computing 2 sample t-test for these two variable
+
+```{r}
+res <- t.test(metri ~ binar, data = my_data, var.equal = TRUE)
+res
+```
+### Now computing mann-whitney u-test for the same variable with the data frame
+```{r}
+#calculating the Mann Whitney U test
+mann <- wilcox.test(metri ~ binar, data = my_data)
+mann
+```
+
+### *Here we can see two different scores from t-test and mann whitney u-test on the data frame of one metric variable and one binary variable.<br /> According to t-test we can not reject the null hypothesis as the p value is larger than the significance value 0.05.<br /> On the other hand, mann whitney u-test is showing that we can reject the null hypothesis because of its lower P value than the significance value.<br /> Here, The metric variable data is heavily right skewed which may cause higher error for t-test but the dataset is large for it's advantage where the u-test might suffer from the size.*
+
+```{r}
+hist(m, prob = TRUE, main = "Right Skewed Data", xlab = "Metric Variable", col = 'white', breaks = 100)
+z <- seq(min(m), max(m), length = 50)
+f <- dnorm(z, mean = mean(m), sd = sd(m))
+lines(z, f, col = "black", lwd = 1)
+```
+
+## Exercise 2: Study planning (optional)
+
+Compute the sample size using R or G*Power, for a study that investigates the question if biking to the HPI is associated with concentration in class or not.
+
+Think about how you can formulate this study question in terms of variables, and which statistical test (that we have covered in class 6) would be appropriate for this.
+
+a) Which test could you use?
+
+b) Which sample size is necessary, to find a true effect with 80\% power at $\alpha=0.05$ using this statistical test?

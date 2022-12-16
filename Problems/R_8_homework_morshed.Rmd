@@ -1,0 +1,129 @@
+---
+title: "Homework 8"
+author: "Stefan Konigorski"
+date: "December 7, 2022"
+output:
+  html_document: default
+---
+
+Download this R Markdown file, save it on your computer, and perform all the below tasks by inserting your answer in text or by inserting R chunks below. After you are done, upload this file with your solutions on Moodle.
+
+## Exercise 1: Correlation
+
+a) In the KiGGS dataset, compute the Pearson and Spearman correlation coefficient for the two variables 'sys1' and 'sys2' and hypothesis tests whether the two variables are associated or not. Interpret the results, and decide which of the two coefficients you would report in your analysis and why.
+
+## Load KiGGS data
+
+```{r}
+dat_link <- url("https://www.dropbox.com/s/pd0z829pv2otzqt/KiGGS03_06.RData?dl=1")
+load(dat_link)
+dat <- KiGGS03_06
+```
+
+```{r}
+# Here for 2 metric variables:
+sbp1 <- as.numeric(as.character(dat$sys1))
+sbp2 <- as.numeric(as.character(dat$sys2))
+
+# computing correlations, confidence intervals and perform hypothesis test:
+print("Correlation by pearson's method")
+cor.test(sbp1, sbp2, use = "complete.obs", method = "pearson")
+print("Correlation by spearman's method")
+cor.test(sbp1, sbp2, use = "complete.obs", method = "spearman")
+
+```
+## SHowing Scatterplots and distribution for the two variables
+
+```{r}
+# scatterplots
+plot(data.frame(sbp1, sbp2))
+hist(sbp1, main="Distribution of sys1")
+hist(sbp2, main="Distribution of sys2")
+```
+## Interpreation: Here the p value indicates that we have enough evidence to reject the null hypothesis which means the variables are higly associated and we can see that the variables are positivly correalted to each other. Here we will use pearson's coefficient for the report as we can see from the histogram that the variable are normally distributed. Pearson's method is well-suited for normally distributed variables where spearman's coefficient is well-suited for ordinal or non-normally distributed variables.
+
+
+b) Optional: Compute confidence intervals of the correlation coefficient estimates from part a). Note: for confidence intervals of the Spearman coefficient, you need another function.
+
+## Exercise 2: Linear regression
+
+a) Predict sys2 by sys1 using a simple linear regression, and interpret the results.
+```{r}
+# computing linear regression models
+res1 <- lm(sbp2 ~ sbp1)
+# Look at the results
+summary(res1)
+```
+```{r}
+# Visualize results
+plot(sbp2, sbp1)
+abline(a = summary(res1)$coefficients[1, 1], b = summary(res1)$coefficients[2, 1], col="red")
+
+
+# get predictions of SBP2
+sbp2_pred1 <- predict(res1)
+head(sbp2)
+head(sbp2_pred1)
+```
+## Interpretetion : From the residual we see that our data is not symmetrical but right skewed, so our regression line can not predict as well on some data as it can with the others. FRom the coefficient summary we can see that t-value is large and thus the possiblity of coefficent being non zero is high. Also from the p-value we have enough evidence(as the p-value is < significance level) to reject the null hypothesis and say that the coefficient is not zero. From the residual std error we can see that the avg difference between the actual value and predicted value is 6.305 which is not very high but it makes a difference. It means our prediction line close to the actual values.From the R-Squared value, we can say that 71.96% of the variation within our dependent variable "sys2" is explained by our independent variable "sys1". We can see from our model, the F-statistic is very large and our p-value is so small it is basically zero. This would lead us to reject the null hypothesis and conclude that there is strong evidence that a relationship does exist between sys2 and sys1.
+
+b) Add age2 and sex as predictors to the linear regression model above, and interpret the results. 
+```{r}
+# creating new variables for age2 and sex 
+var_age = dat$age2
+var_sex = dat$sex
+```
+
+```{r}
+#factorizing the variables
+var_age <- factor(var_age, labels = c("0 - 1 J.", "2 - 3 J.", "4 - 5 J.", "6 - 7 J.", "8 - 9 J.", "10 - 11 J.", "12 - 13 J.", "14 - 15 J.", "16 - 17 J."))
+var_sex <- factor(var_sex, labels = c("Männlich", "Weiblich"))
+```
+
+```{r}
+# computing new linear regression model
+res2 <- lm(sbp2 ~ sbp1 + as.numeric(var_age) + as.numeric(var_sex))
+# printing at the results
+summary(res2)
+```
+## Visualizing regression 
+```{r warning=FALSE}
+# Visualizing
+library(ggplot2)
+cbPalette <- c("#000000","#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+data = data.frame(sbp1, sbp2, var_age, var_sex)
+ggplot(data, aes(x=sbp2, y=sbp1, color=as.factor(var_age))) +
+  geom_point() + 
+  facet_grid(. ~ as.factor(var_sex))+
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  scale_color_manual(values = cbPalette)
+#visualizing different regression line for age
+ggplot(data, aes(x=sbp2, y=sbp1, color=as.factor(var_age))) +
+  geom_point() + 
+  facet_grid(. ~ as.factor(var_sex))+
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_color_manual(values = cbPalette)
+#The overall regression line
+plot(sbp2, sbp1)
+abline(a = summary(res2)$coefficients[1, 1], b = summary(res2)$coefficients[2, 1], col="blue")
+```
+```{r}
+# get predictions of SBP
+sbp2_pred2 <- predict(res2)
+head(sbp2)
+head(sbp2_pred2)
+```
+
+
+```{r}
+plot(sbp2, sbp1)
+abline(a = summary(res1)$coefficients[1, 1], b = summary(res1)$coefficients[2, 1], col="red")
+abline(a = summary(res2)$coefficients[1, 1], b = summary(res2)$coefficients[2, 1], col="blue")
+```
+## Interpretetion : From the residual we see that our data is not symmetrical but more right skewed than first model, so our regression line can not predict as well on some data as it can with the others. FRom the coefficient summary we can see that t-value is large and thus the possiblity of coefficent being non zero is high. Also from the p-value we have enough evidence(as the p-value is < significance level) to reject the null hypothesis and say that the coefficient is not zero. From the residual std error we can see that the avg difference between the actual value and predicted value is 6.1.23 which is less than first model but still on the same level which makes a difference. It means our prediction line is close to actual values.From the R-Squared value, we can say that 73.56% of the variation within our dependent variable "sys2" is explained by our independent variables. We can see from our model, the F-statistic is very large and our p-value is so small it is basically zero. This would lead us to reject the null hypothesis and conclude that there is strong evidence that a relationship does exist between sys2 and sys1.
+
+## Exercise 3: Visualization of regression (optional)
+
+Use the functions in ggplot2 to compute a scatter plot and insert the regression line of the analysis in exercise 2a.
+
+## We have already done it in the exercise 2.
