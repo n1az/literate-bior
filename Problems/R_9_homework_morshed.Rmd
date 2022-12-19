@@ -1,0 +1,94 @@
+---
+title: "Additional Homework 9"
+author: "Stefan Konigorski"
+date: "December 14, 2022"
+output:
+  html_document: default
+---
+
+Download this R Markdown file, save it on your computer, and perform all the below tasks by inserting your answer in text or by inserting R chunks below. After you are done, upload this file with your solutions on Moodle.
+
+## Exercise 1: Assumptions of linear regression
+
+Load the KiGGS dataset and compute a regression predicting BMI by sex and age groups (age2):
+
+```{r}
+# load data
+dat_link <- url("https://www.dropbox.com/s/pd0z829pv2otzqt/KiGGS03_06.RData?dl=1")
+load(dat_link)
+dat <- KiGGS03_06
+
+# Regression:
+fit1 <- lm(dat$bmiB ~ dat$sex + as.numeric(dat$age2))
+
+# results:
+summary(fit1)
+```
+## Predicting bmi
+```{r}
+pred_res <- predict(fit1)
+head(pred_res)
+head(dat$bmiB)
+```
+
+
+In this model, investigate and judge whether the assumptions listed on slide 13 in lecture 9 are satisfied.
+
+
+# Checking if bmi is continious
+```{r}
+library(plyr)
+is.discrete(dat$bmiB)
+```
+## SO the bmi is continious
+
+## Checking linearity
+```{r}
+plot(fit1,1)
+```
+## The Plot shows that the linearity exists between the regression line and the residual values.
+
+## Checking if all relevant variables are in the model
+
+```{r}
+ndat <- select_if(dat, is.numeric)
+cor_list = cor(ndat)
+cor_list['bmiB']
+```
+## So, we can see that bmi has no correlation with any metric values. There might be some ordinal values which has correaltion with age and sex variable
+
+## Checking if the observations are independent
+```{r}
+source("http://www.sthda.com/upload/rquery_cormat.r")
+mdata = data.frame(dat$bmiB, as.numeric(dat$sex), as.numeric(dat$age2))
+corz = rquery.cormat(mdata)
+print(corz$r)
+print(corz$p)
+```
+## Here we can see that the observations are independent.
+
+
+## Checking the presence of multicollinearity
+
+## From the previous plot we can see that the predictors have no strong correlation between them. So there is no multicollinearity. 
+
+## Checking homoscedasticty
+```{r}
+plot(fit1,3)
+```
+## We can see that the residuals are close to equally distrbuted with a horizontal line to be largely equal in variance with a slight increase towards the right of the plot.
+
+## Checking normal distribution of the residuals
+```{r}
+plot(fit1,2)
+```
+## The plot shows that the residuals are along with the straight line which suggests that the residuals are not close to normal distribution.
+
+
+## Exercise 2: Model selection in linear regression (optional)
+
+In the KiGGS dataset, aim to select relevant predictors for sys12 (systolic blood pressure). Use 2 of the model selection approaches described on slide 26, apply them to the KiGGS dataset and compare the results.
+
+## Exercise 3: Linear regression with multiple imputation (optional)
+
+Run the code in the Rmd file R_9b_linear_regression_MI.Rmd, inspect the R code what it is doing, and look at the results. Apply the same to the linear regression model of another variable of your choice.
