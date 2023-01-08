@@ -1,0 +1,118 @@
+---
+title: "Homework 10"
+author: "Stefan Konigorski"
+date: "January 11, 2023"
+output:
+  html_document: default
+---
+
+Download this R Markdown file, save it on your computer, and perform all the below tasks by inserting your answer in text or by inserting R chunks below. After you are done, upload this file with your solutions on Moodle.
+
+For all exercises, use the KiGGS dataset.
+
+## Load KiGGS data
+
+```{r}
+dat_link <- url("https://www.dropbox.com/s/pd0z829pv2otzqt/KiGGS03_06.RData?dl=1")
+load(dat_link)
+dat <- KiGGS03_06
+```
+
+## Exercise 1: Logistic regression
+
+Choose 1 suitable outcome variable of interest and 3 predictors, and compute a logistic regression model. Interpret the results: which predictor is associated with the outcome and what is the strength of association (odds ratio)? Also, is the model a good fit i.e. can the outcome be predicted well (look at the misclassification table for this)?
+
+```{r}
+# Preparing the variables for logistic regression 
+str(dat$wKiGGS)
+str(dat$wKGSLab)
+str(dat$wKGSVitD)
+str(dat$e031)
+table(dat$e031)
+# -> dat$e031 is factor with 2 categories
+dat$e031 <- factor(dat$e031, labels = c("yes", "no"))
+
+```
+```{r}
+# Computing a logistic regression with these variables
+model1 <- glm(e031 ~ as.numeric(wKiGGS) + as.numeric(wKGSLab) + as.numeric(wKGSVitD), family = binomial(link = "logit"), data = dat)
+summary(model1)
+```
+```{r}
+# Computing the odds ratio:
+exp(coef(model1))
+```
+```{r}
+# predicting and checking missclassification table
+preds1 <- predict(model1, type = "response")
+summary(preds1)
+
+e031.p.preds1 <- rep(NA, length(dat$e031))
+e031.p.preds1[as.numeric(names(preds1))] <- preds1
+e031.preds1 <- e031.p.preds1 > mean(e031.p.preds1, na.rm = TRUE)
+
+table(e031.preds1)
+table(dat$e031)
+table( e031.preds1, dat$e031)
+```
+## As we can see from the odds ratio, we should not use this model for predicting disability as the strength of association is poor. The missclassification table shows us that this model missclassified a large number of samples. So, we can say that the model is not a good fit and can not predict the outcome.
+
+## Exercise 2: Poisson regression
+
+Predict the amount of measles vaccinations (Maanzahl) by the number of siblings (e006B1), the sex and age of the children (sex, age2), place of residence (STALA, OW) and the monthly household income (e093), using a Poisson regression model. Interpret the results. Which variables are associated with the outcome? Is the model a good fit to the data?
+
+```{r}
+# Preparing the variables
+str(dat$Maanzahl)
+str(dat$e006B1)
+str(dat$sex)
+str(dat$age2)
+str(dat$STALA)
+str(dat$OW)
+str(dat$e093)
+
+```
+```{r}
+# checking the variables
+table(dat$Maanzahl)
+table(dat$e006B1)
+table(dat$sex)
+table(dat$age2)
+table(dat$STALA)
+table(dat$OW)
+table(dat$e093)
+```
+
+```{r}
+# Factorizing variables
+dat$Maanzahl <- as.numeric(as.character(dat$Maanzahl))
+dat$e006B1<- factor(dat$e006B1, labels = c("no sibling", "1 sibling", "2 or more siblings"))
+dat$sex   <- factor(dat$sex, labels = c("boys", "girls"))
+dat$age2  <- factor(dat$age2, labels = c("0-1y", "2-3y", "4-5y", "6-7y", "8-9y", "10-11y", "12-13y", "14-15y", "16-17y"))
+dat$OW    <- factor(dat$OW, labels = c("east", "west"))
+dat$STALA <- factor(dat$STALA, labels = c("rural", "small_city", "medium_city", "urban"))
+```
+
+
+```{r}
+# Poisson Regression: 
+# fitting the model:
+model2 <- glm(dat$Maanzahl ~ e006B1 + sex + age2 + STALA + OW + e093, family = poisson(link = "log"), data = dat)
+
+# results:
+summary(model2)
+exp(coef(model2))
+```
+
+```{r}
+# Predictions:
+preds2 <- data.frame(emp = dat$Maanzahl[1:17640 %in% names(predict(model2, type="response"))], exp = predict(model2, type="response"))
+cor(preds2$emp, preds2$exp)
+summary(preds2$exp)
+```
+## It seems that "e006B1, age2, ow" are highly associated with the outcome. From the missclassification table we can se that the correlation between predicted values and actual values are 0.55 which is enough to say that the model is not a good fit to the data and can not predict the outcome.
+
+
+## Exercise 3: Negative Binomial regression (optional)
+
+Predict the amount of measles vaccinations (Maanzahl) by the number of siblings (e006B1), the sex and age of the children (sex, age2), place of residence (STALA, OW) and the monthly household income (e093), using a Negative Binomial regression model. Interpret the results. Which variables are associated with the outcome? Is the model a good fit to the data?
