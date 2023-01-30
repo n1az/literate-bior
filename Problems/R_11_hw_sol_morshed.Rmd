@@ -1,0 +1,119 @@
+---
+title: "Homework 11"
+author: "Stefan Konigorski"
+date: "January 18, 2023"
+output:
+  html_document: default
+---
+
+Download this R Markdown file, save it on your computer, and perform all the below tasks by inserting your answer in text or by inserting R chunks below. After you are done, upload this file with your solutions on Moodle.
+
+For all exercises, use the KiGGS dataset.
+
+## Exercise 1: Analysis of variance
+
+Choose serum glucose levels (GLUCX) as outcome variable of interest, the factors BMI group (bmiKH) and sex (sex), and physical wellbeing (kw100.e) as quantitative covariate (=metric variable), and compute 5 ANOVA models: (i-ii) one model with each factors separately, (iii) one model with both factors, (iv) one model with both factors and their interaction, (v) one model with both factors, their interaction, and the covariate.
+
+Choose at least one aspect that you observed in the results and write one sentence on the interpretation of this results. For example, you can write about: Write which factor is associated with the outcome? Is there a significant interaction effect? Does anything change after adjusting for the covariate?
+
+```{r}
+# Preparation
+dat_link <- url("https://www.dropbox.com/s/pd0z829pv2otzqt/KiGGS03_06.RData?dl=1")
+load(dat_link)
+dat <- KiGGS03_06
+dat$GLUCX <- as.numeric(as.character(dat$GLUCX))
+dat$kw100.e <- as.numeric(as.character(dat$kw100.e))
+dat$bmiKH <- factor(dat$bmiKH, labels = c("strong underweight", "underweight", "normal weight", "overweight", "obese"))
+dat$sex <- factor(dat$sex, labels = c("boys", "girls"))
+```
+
+```{r}
+# Let's see the distribution:
+hist(dat$GLUCX)
+
+```
+
+### It seems that the outcome variable is close to normal distribution
+
+## i. Computing a 1-way ANOVA to investigate if serum glucose levels (GLUCX) differs between the BMI group (bmiKH)
+
+```{r}
+fit1_lm <- lm(GLUCX ~ bmiKH, data = dat)
+summary(fit1_lm)
+anova(fit1_lm)
+```
+
+### As the p- value is really small we can reject the null hypothesis which means there differences between the BMI group but as the F-Value is small, the difference is not very high.
+
+## ii. Computing a 1-way ANOVA to investigate if serum glucose levels (GLUCX) differs between sex (sex)
+```{r}
+fit2_lm <- lm(GLUCX ~ sex, data = dat)
+summary(fit2_lm)
+anova(fit2_lm)
+```
+
+### As the p- value is really small we can reject the null hypothesis here too which means there differences between the sex but as the F-Value is bigger, the difference is higher.
+
+## iii. Computing a 2-way ANOVA to investigate if serum glucose levels (GLUCX) differs between the factors BMI group (bmiKH) and sex (sex)
+```{r}
+fit3_lm <- lm(GLUCX ~ bmiKH + sex, data = dat)
+summary(fit3_lm)
+anova(fit3_lm)
+```
+
+### We can see that the glucose level changes in terms of different groups of BMI or sex and the difference is higher between sex than between BMI groups.
+
+## iv. one model with both factors and their interaction
+```{r}
+# Visualization in profile plots
+library(interactions)
+
+
+dat_I <- data.frame(GLUCX = dat$GLUCX, bmiKH = dat$bmiKH, sex = dat$sex)
+dat_I <- dat_I[complete.cases(dat_I),]
+dat_I <- droplevels(dat_I)
+
+# Now recompute ANOVA and use the cat_plot function.
+fit3 <- aov(GLUCX ~ bmiKH + sex + bmiKH:sex, data = dat_I)
+cat_plot(fit3, pred = bmiKH, modx = sex)
+
+
+cat_plot(fit3, pred = bmiKH, modx = sex, plot.points = TRUE)
+(plot1 <- cat_plot(fit3, pred = bmiKH, modx = sex, geom = "line") )  
+
+
+# Compare to model without interaction:
+cat_plot(fit3_lm, pred = bmiKH, modx = sex, geom = "line")
+```
+
+### there are interactions and we can see that in the plots, where the difference of glucose level for boys and girls in terms of underweight seems very different than the second plot without interaction. 
+
+## v. one model with both factors, their interaction, and the covariate.
+
+```{r}
+dat_C <- data.frame(GLUCX = dat$GLUCX, bmiKH = dat$bmiKH, sex = dat$sex, wellbeing = dat$kw100.e)
+dat_C <- dat_C[complete.cases(dat_C),]
+dat_C <- droplevels(dat_C)
+
+# Now recompute ANOVA and use the cat_plot function.
+fit4 <- aov(GLUCX ~ bmiKH + sex + wellbeing + bmiKH:sex , data = dat_C)
+cat_plot(fit4, pred = bmiKH, modx = sex)
+
+
+cat_plot(fit4, pred = bmiKH, modx = sex, plot.points = TRUE)
+(plot1 <- cat_plot(fit4, pred = bmiKH, modx = sex, geom = "line") )
+```
+### After adjusting the covariate, we can not see any significant changes in the model according to the plots.
+
+## Exercise 2: Posthoc tests in analysis of variance (optional)
+
+Perform posthoc t-tests with and without a correction for multiple testing for the ANOVA in exercise 1, where we tested whether systolic blood pressure differed between age groups.
+
+```{r}
+# Preparation
+dat_link <- url("https://www.dropbox.com/s/pd0z829pv2otzqt/KiGGS03_06.RData?dl=1")
+load(dat_link)
+dat <- KiGGS03_06
+dat$age2 <- factor(dat$age2, labels = c("0-1y", "2-3y", "4-5y", "6-7y", "8-9y", "10-11y", "12-13y", "14-15y", "16-17y"))
+```
+
