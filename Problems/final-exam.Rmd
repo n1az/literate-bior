@@ -1,0 +1,51 @@
+---
+  title: "Final Exam - Biostatistics & Epidemiological Data Analysis using R"
+author: "Md Niaz Morshed"
+date: "February 21, 2023"
+output:
+  html_document: default
+---
+  
+## Importing the dataset
+```{r}
+library(haven)
+kiggs_data <- read_sav("KiGGS03_06.sav")
+```
+
+## Creating kiggs dataframe with all the variables
+```{r}
+kiggs <- data.frame(E070M = kiggs_data$E070M, E070V = kiggs_data$E070V, E072 = kiggs_data$E072, E074 = kiggs_data$E074, arztZ01 = kiggs_data$arzt01, sex = kiggs_data$sex, age2 = kiggs_data$age2, schichtz = kiggs_data$schichtz, e065z = kiggs_data$e065z)
+```
+
+## Saving the formatted dataframe
+```{r}
+save(kiggs,file="kiggs.Rda")
+```
+
+## Checking if the E070M, E070V, E072, E074 variables are factors or not
+```{r}
+sapply(kiggs[0:4], class)
+```
+### It's showing that all the variables are factors.
+
+## Setting the value "has not breastfed" of variable E074 to NA for all children
+```{r}
+levels(kiggs$E074)[levels(kiggs$E074)=="has not breastfed"]<-NA
+
+```
+## Deleting this NA factor level from the variable
+```{r}
+kiggs <- kiggs[!is.na(kiggs$E074), ]
+```
+
+## Checking whether these two steps worked as intended
+```{r}
+table(is.na(kiggs$E074))
+```
+## Calculating the new variable burdenS
+```{r}
+table(kiggs$arztZ01)
+```
+
+
+
