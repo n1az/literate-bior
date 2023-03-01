@@ -41,10 +41,17 @@ kiggs <- kiggs[!is.na(kiggs$E074), ]
 ## Checking whether these two steps worked as intended
 ```{r}
 table(is.na(kiggs$E074))
+
 ```
-## Calculating the new variable burdenS
+## Calculating the new variable burdenS and adding to the dataset kiggs
 ```{r}
-table(kiggs$arztZ01)
+kiggs$burdenS <- dense_rank(kiggs$E070M)+ dense_rank(kiggs$E070V)+ dense_rank(kiggs$E072)+dense_rank(kiggs$E074)
+table(kiggs$burdenS)
+
+```
+## Updating the previous file
+```{r}
+save(kiggs,file="kiggs.Rda")
 ```
 
 
