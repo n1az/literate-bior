@@ -1,0 +1,490 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Final Exam - Biostatistics \& Epidemiological Data Analysis using R},
+  pdfauthor={Md Niaz Morshed},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Final Exam - Biostatistics \& Epidemiological Data Analysis using
+R}
+\author{Md Niaz Morshed}
+\date{February 21, 2023}
+
+\begin{document}
+\maketitle
+
+\hypertarget{question-1}{%
+\subsubsection{Question 1}\label{question-1}}
+
+\textbf{R markdown file is created}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{question-2}{%
+\subsubsection{Question 2}\label{question-2}}
+
+\begin{quote}
+Importing the dataset
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(haven)}
+\NormalTok{kiggs\_data }\OtherTok{\textless{}{-}} \FunctionTok{read\_sav}\NormalTok{(}\StringTok{"KiGGS03\_06.sav"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{quote}
+Creating kiggs dataframe with all the variables
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{kiggs }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{E070M =}\NormalTok{ kiggs\_data}\SpecialCharTok{$}\NormalTok{E070M, }\AttributeTok{E070V =}\NormalTok{ kiggs\_data}\SpecialCharTok{$}\NormalTok{E070V, }\AttributeTok{E072 =}\NormalTok{ kiggs\_data}\SpecialCharTok{$}\NormalTok{E072, }\AttributeTok{E074 =}\NormalTok{ kiggs\_data}\SpecialCharTok{$}\NormalTok{E074, }\AttributeTok{arztZ01 =}\NormalTok{ kiggs\_data}\SpecialCharTok{$}\NormalTok{arztZ01, }\AttributeTok{sex =}\NormalTok{ kiggs\_data}\SpecialCharTok{$}\NormalTok{sex, }\AttributeTok{age2 =}\NormalTok{ kiggs\_data}\SpecialCharTok{$}\NormalTok{age2, }\AttributeTok{schichtz =}\NormalTok{ kiggs\_data}\SpecialCharTok{$}\NormalTok{schichtz, }\AttributeTok{e065z =}\NormalTok{ kiggs\_data}\SpecialCharTok{$}\NormalTok{e065z)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{quote}
+Running the provided formatting
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{source\_rmd }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(file, ...) \{}
+\NormalTok{  tmp\_file }\OtherTok{=} \FunctionTok{tempfile}\NormalTok{(}\AttributeTok{fileext=}\StringTok{".R"}\NormalTok{)}
+  \FunctionTok{on.exit}\NormalTok{(}\FunctionTok{unlink}\NormalTok{(tmp\_file), }\AttributeTok{add =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{purl}\NormalTok{(file, }\AttributeTok{output=}\NormalTok{tmp\_file)}
+  \FunctionTok{source}\NormalTok{(}\AttributeTok{file =}\NormalTok{ tmp\_file, ...)}
+\NormalTok{\}}
+\FunctionTok{source\_rmd}\NormalTok{(}\StringTok{"data\_formatting.rmd"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{quote}
+Saving the formatted dataframe
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{save}\NormalTok{(kiggs,}\AttributeTok{file=}\StringTok{"kiggs.Rda"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{question-3}{%
+\subsubsection{Question 3}\label{question-3}}
+
+\begin{quote}
+Checking if the E070M, E070V, E072, E074 variables are factors or not
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sapply}\NormalTok{(kiggs[}\DecValTok{0}\SpecialCharTok{:}\DecValTok{4}\NormalTok{], class)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    E070M    E070V     E072     E074 
+## "factor" "factor" "factor" "factor"
+\end{verbatim}
+
+\textbf{It's showing that all the variables are factors now.}
+
+\begin{quote}
+Setting the value ``has not breastfed'' of variable E074 to NA for all
+children
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{levels}\NormalTok{(kiggs}\SpecialCharTok{$}\NormalTok{E074)[}\FunctionTok{levels}\NormalTok{(kiggs}\SpecialCharTok{$}\NormalTok{E074)}\SpecialCharTok{==}\StringTok{"has not breastfed"}\NormalTok{]}\OtherTok{\textless{}{-}}\ConstantTok{NA}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{quote}
+Deleting this NA factor level from the variable
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{kiggs }\OtherTok{\textless{}{-}}\NormalTok{ kiggs[}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(kiggs}\SpecialCharTok{$}\NormalTok{E074), ]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{quote}
+Checking whether these two steps worked as intended
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{table}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(kiggs}\SpecialCharTok{$}\NormalTok{E074))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## FALSE 
+## 13500
+\end{verbatim}
+
+\begin{quote}
+Calculating the new variable burdenS and adding to the dataset kiggs
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(dplyr)}
+\NormalTok{kiggs}\SpecialCharTok{$}\NormalTok{burdenS }\OtherTok{\textless{}{-}} \FunctionTok{dense\_rank}\NormalTok{(kiggs}\SpecialCharTok{$}\NormalTok{E070M)}\SpecialCharTok{+} \FunctionTok{dense\_rank}\NormalTok{(kiggs}\SpecialCharTok{$}\NormalTok{E070V)}\SpecialCharTok{+} \FunctionTok{dense\_rank}\NormalTok{(kiggs}\SpecialCharTok{$}\NormalTok{E072)}\SpecialCharTok{+}\FunctionTok{dense\_rank}\NormalTok{(kiggs}\SpecialCharTok{$}\NormalTok{E074)}
+\FunctionTok{table}\NormalTok{(kiggs}\SpecialCharTok{$}\NormalTok{burdenS)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##    4    5    6    7    8    9   10   11   12 
+##  134   76  459  319  961  561 2457 1083 6599
+\end{verbatim}
+
+\textbf{We can see from the burdenS values, that the higher value means,
+the children were exposed to low level of smoking and lower value means
+a higher level of expose. And we can say that, the number of high level
+exposed children is very low compared to the number of low level exposed
+children.}
+
+\begin{quote}
+Updating the previous file
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{save}\NormalTok{(kiggs,}\AttributeTok{file=}\StringTok{"kiggs.Rda"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{question-4}{%
+\subsubsection{Question 4}\label{question-4}}
+
+\begin{quote}
+Calculating absolute frequency tables for age2, sex, burdenS, and mean +
+standard deviation for arztZ01.
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(qwraps2)}
+\FunctionTok{options}\NormalTok{(}\AttributeTok{qwraps2\_markup =} \StringTok{"markdown"}\NormalTok{)}
+
+\NormalTok{our\_summaryx }\OtherTok{\textless{}{-}}
+  \FunctionTok{list}\NormalTok{(}\StringTok{"age2"} \OtherTok{=} 
+       \FunctionTok{list}\NormalTok{(}\StringTok{"0{-}1y"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{n\_perc0}\NormalTok{(age2 }\SpecialCharTok{==} \StringTok{"0{-}1y"}\NormalTok{, }\AttributeTok{show\_symbol =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{),}
+            \StringTok{"2{-}3y"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{n\_perc0}\NormalTok{(age2 }\SpecialCharTok{==} \StringTok{"2{-}3y"}\NormalTok{, }\AttributeTok{show\_symbol =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{),}
+            \StringTok{"4{-}5y"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{n\_perc0}\NormalTok{(age2 }\SpecialCharTok{==} \StringTok{"4{-}5y"}\NormalTok{, }\AttributeTok{show\_symbol =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{),}
+            \StringTok{"6{-}7y"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{n\_perc0}\NormalTok{(age2 }\SpecialCharTok{==} \StringTok{"6{-}7y"}\NormalTok{, }\AttributeTok{show\_symbol =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{),}
+            \StringTok{"8{-}9y"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{n\_perc0}\NormalTok{(age2 }\SpecialCharTok{==} \StringTok{"8{-}9y"}\NormalTok{, }\AttributeTok{show\_symbol =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{),}
+            \StringTok{"10{-}11y"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{n\_perc0}\NormalTok{(age2 }\SpecialCharTok{==} \StringTok{"10{-}11y"}\NormalTok{, }\AttributeTok{show\_symbol =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{),}
+            \StringTok{"12{-}13y"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{n\_perc0}\NormalTok{(age2 }\SpecialCharTok{==} \StringTok{"12{-}13y"}\NormalTok{, }\AttributeTok{show\_symbol =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{),}
+            \StringTok{"14{-}15y"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{n\_perc0}\NormalTok{(age2 }\SpecialCharTok{==} \StringTok{"14{-}15y"}\NormalTok{, }\AttributeTok{show\_symbol =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{),}
+            \StringTok{"16{-}17y"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{n\_perc0}\NormalTok{(age2 }\SpecialCharTok{==} \StringTok{"16{-}17y"}\NormalTok{, }\AttributeTok{show\_symbol =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{)),}
+       \StringTok{"sex"} \OtherTok{=} 
+       \FunctionTok{list}\NormalTok{(}\StringTok{"boys"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{n\_perc0}\NormalTok{(sex }\SpecialCharTok{==} \StringTok{"boys"}\NormalTok{, }\AttributeTok{show\_symbol =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{),}
+            \StringTok{"girls"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{n\_perc0}\NormalTok{(sex }\SpecialCharTok{==} \StringTok{"girls"}\NormalTok{, }\AttributeTok{show\_symbol =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{)),}
+      \StringTok{"burdenS"} \OtherTok{=} 
+       \FunctionTok{list}\NormalTok{(}\StringTok{"4"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{n\_perc0}\NormalTok{(burdenS }\SpecialCharTok{==} \StringTok{"4"}\NormalTok{, }\AttributeTok{show\_symbol =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{),}
+            \StringTok{"5"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{n\_perc0}\NormalTok{(burdenS }\SpecialCharTok{==} \StringTok{"5"}\NormalTok{, }\AttributeTok{show\_symbol =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{),}
+            \StringTok{"6"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{n\_perc0}\NormalTok{(burdenS }\SpecialCharTok{==} \StringTok{"6"}\NormalTok{, }\AttributeTok{show\_symbol =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{),}
+            \StringTok{"7"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{n\_perc0}\NormalTok{(burdenS }\SpecialCharTok{==} \StringTok{"7"}\NormalTok{, }\AttributeTok{show\_symbol =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{),}
+            \StringTok{"8"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{n\_perc0}\NormalTok{(burdenS }\SpecialCharTok{==} \StringTok{"8"}\NormalTok{, }\AttributeTok{show\_symbol =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{),}
+            \StringTok{"9"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{n\_perc0}\NormalTok{(burdenS }\SpecialCharTok{==} \StringTok{"9"}\NormalTok{, }\AttributeTok{show\_symbol =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{),}
+            \StringTok{"10"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{n\_perc0}\NormalTok{(burdenS }\SpecialCharTok{==} \StringTok{"10"}\NormalTok{, }\AttributeTok{show\_symbol =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{),}
+            \StringTok{"11"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{n\_perc0}\NormalTok{(burdenS }\SpecialCharTok{==} \StringTok{"11"}\NormalTok{, }\AttributeTok{show\_symbol =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{),}
+            \StringTok{"12"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{n\_perc0}\NormalTok{(burdenS }\SpecialCharTok{==} \StringTok{"12"}\NormalTok{, }\AttributeTok{show\_symbol =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{)),}
+      \StringTok{"arztZ01"} \OtherTok{=}
+       \FunctionTok{list}\NormalTok{(}\StringTok{"Mean (SD)"} \OtherTok{=} \ErrorTok{\textasciitilde{}}\NormalTok{ qwraps2}\SpecialCharTok{::}\FunctionTok{mean\_sd}\NormalTok{(arztZ01, }\AttributeTok{digits =} \DecValTok{3}\NormalTok{, }\AttributeTok{denote\_sd =} \StringTok{"paren"}\NormalTok{, }\AttributeTok{na\_rm =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{show\_n =} \StringTok{"never"}\NormalTok{))}
+\NormalTok{     )}
+
+\NormalTok{qwraps2}\SpecialCharTok{::}\FunctionTok{summary\_table}\NormalTok{(kiggs, our\_summaryx)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule()
+& kiggs (N = 13,500) \\
+\midrule()
+\endhead
+\textbf{age2} & ~~ \\
+~~ 0-1y & 1,517 (11\%) \\
+~~ 2-3y & 1,493 (11\%) \\
+~~ 4-5y & 1,502 (11\%) \\
+~~ 6-7y & 1,587 (12\%) \\
+~~ 8-9y & 1,659 (12\%) \\
+~~ 10-11y & 1,556 (12\%) \\
+~~ 12-13y & 1,460 (11\%) \\
+~~ 14-15y & 1,434 (11\%) \\
+~~ 16-17y & 1,292 (10\%) \\
+\textbf{sex} & ~~ \\
+~~ boys & 6,816 (50\%) \\
+~~ girls & 6,684 (50\%) \\
+\textbf{burdenS} & ~~ \\
+~~ 4 & 134 (1\%) \\
+~~ 5 & 76 (1\%) \\
+~~ 6 & 459 (4\%) \\
+~~ 7 & 319 (3\%) \\
+~~ 8 & 961 (8\%) \\
+~~ 9 & 561 (4\%) \\
+~~ 10 & 2,457 (19\%) \\
+~~ 11 & 1,083 (9\%) \\
+~~ 12 & 6,599 (52\%) \\
+\textbf{arztZ01} & ~~ \\
+~~ Mean (SD) & 2.464 (3.395) \\
+\bottomrule()
+\end{longtable}
+
+\begin{quote}
+showing the number of missing values each of these 4 variables has, and
+how many observations have complete data for these 4 variables
+\end{quote}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule()
+Variable & Missing value count & Complete cases \\
+\midrule()
+\endhead
+age2 & 0 & 13500 \\
+sex & 0 & 13500 \\
+burdenS & 851 & 12649 \\
+arztZ01 & 359 & 13141 \\
+All Four & 1210 & 12339 \\
+\bottomrule()
+\end{longtable}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{question-5}{%
+\subsubsection{Question 5}\label{question-5}}
+
+\begin{quote}
+Calculating linear regression
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmx }\OtherTok{=} \FunctionTok{lm}\NormalTok{(arztZ01 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ burdenS }\SpecialCharTok{+}\NormalTok{ sex }\SpecialCharTok{+} \FunctionTok{as.numeric}\NormalTok{(age2) }\SpecialCharTok{+} \FunctionTok{as.numeric}\NormalTok{(schichtz) }\SpecialCharTok{+}\NormalTok{ e065z, }\AttributeTok{data =}\NormalTok{ kiggs)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{There are total 5 predictors and they are:}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \textbf{burdenS} \emph{(integer \textbar{} It is metric and we take
+    it as it is.)}
+  \item
+    \textbf{sex} \emph{(factor \textbar{} It is nominal and we take it
+    as a factor as it is.)}
+  \item
+    \textbf{age2} \emph{(factor \textbar{} It is in factor and we
+    convert it to numeric.)}
+  \item
+    \textbf{schichtz} \emph{(factor \textbar{} It is ordinal and we
+    convert it to numeric.)}
+  \item
+    \textbf{e065z} \emph{(haven\_labelled, vctrs\_vctr, double
+    \textbar{} It is metric and we take it as it is.)}
+  \end{itemize}
+\end{itemize}
+
+\textbf{Here we have converted \emph{schichtz} and \emph{age2} variables
+from factor to numerical, and left other variables as they are, because
+of they have more than two factor levels.}
+
+\begin{quote}
+The regression coefficient of burdenS
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(lmx)}\SpecialCharTok{$}\NormalTok{coefficients[,}\DecValTok{1}\NormalTok{][}\DecValTok{2}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     burdenS 
+## -0.03135777
+\end{verbatim}
+
+\textbf{My interpretation :} \emph{The resulting value -0.03135777 as
+the regression coefficient of burdenS indicates that for each unit of
+increase in burdenS, the outcome variable arztZ01 will decrease by the
+regression coefficient value.}
+
+\begin{quote}
+95\% confidence interval for the regression coefficients of burdenS
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{confint}\NormalTok{(lmx, }\AttributeTok{level =} \FloatTok{0.95}\NormalTok{)[}\StringTok{"burdenS"}\NormalTok{,]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       2.5 %      97.5 % 
+## -0.07282436  0.01010881
+\end{verbatim}
+
+\begin{quote}
+P-value of the significance test of burdenS
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(lmx)}\SpecialCharTok{$}\NormalTok{coefficients[,}\DecValTok{4}\NormalTok{][}\DecValTok{2}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   burdenS 
+## 0.1382769
+\end{verbatim}
+
+\begin{quote}
+My conclusion
+\end{quote}
+
+\textbf{As we can see the p-value indicates that burdenS does not have a
+significant effect on the health of children and we cannot reject the
+null hypothesis as the alpha is smaller than the p-value here. From the
+regression coefficient we can see that the direction of association is
+negative although it is not statistically significant at alpha level
+0.05 }
+
+\begin{quote}
+Strategy for accounting the correlation between the indiviudals of the
+same area.
+\end{quote}
+
+\textbf{We could use mixed logistic regression model as the observations
+are not independent here.}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{question-6}{%
+\subsubsection{Question 6}\label{question-6}}
+
+\end{document}

@@ -1,75 +1,109 @@
 ---
-title: "Final Exam - Biostatistics & Epidemiological Data Analysis using R"
+title: "<span style='font-size: 30px'>Final Exam - Biostatistics & Epidemiological Data Analysis using R."
 author: "Md Niaz Morshed"
 date: "February 21, 2023"
 output:
-  html_document: default
+  html_document:
+    theme: sandstone
+    highlight: zenburn
 ---
-  
-## Importing the dataset
+
+### Question 1
+
+**R markdown file is created**
+
+***
+
+### Question 2
+
+> Importing the dataset
+
 ```{r}
 library(haven)
 kiggs_data <- read_sav("KiGGS03_06.sav")
 ```
 
-## Creating kiggs dataframe with all the variables
+> Creating kiggs dataframe with all the variables
+
 ```{r}
-kiggs <- data.frame(E070M = kiggs_data$E070M, E070V = kiggs_data$E070V, E072 = kiggs_data$E072, E074 = kiggs_data$E074, arztZ01 = kiggs_data$arztZ01, sex = kiggs_data$sex, age2 = kiggs_data$age2, schichtz = kiggs_data$schichtz, e065z = kiggs_data$e065z)
+kiggs <- data.frame(E070M = kiggs_data$E070M, E070V = kiggs_data$E070V,
+                    E072 = kiggs_data$E072, E074 = kiggs_data$E074,
+                    arztZ01 = kiggs_data$arztZ01, sex = kiggs_data$sex,
+                    age2 = kiggs_data$age2, schichtz = kiggs_data$schichtz,
+                    e065z = kiggs_data$e065z)
 ```
-## Using the provided formatting
-```{r}
+> Running the provided formatting
+
+```{r, results='hide', message=FALSE}
 kiggs$E070M    <- factor(kiggs$E070M,    labels = c("yes, daily", "yes, occasionally", "no"))
 kiggs$E070V    <- factor(kiggs$E070V,    labels = c("yes, daily", "yes, occasionally", "no"))
-kiggs$E072     <- factor(kiggs$E072,     labels = c("yes, regularly", "yes, from time to time", "no, never"))
-kiggs$E074     <- factor(kiggs$E074,     labels = c("yes, regularly", "yes, from time to time", "no, never", "has not breastfed"))
+kiggs$E072     <- factor(kiggs$E072,     labels = c("yes, regularly", "yes, from time to time",
+                                                    "no, never"))
+kiggs$E074     <- factor(kiggs$E074,     labels = c("yes, regularly", "yes, from time to time",
+                                                    "no, never", "has not breastfed"))
 kiggs$sex      <- factor(kiggs$sex,      labels = c("boys", "girls"))
-kiggs$age2     <- factor(kiggs$age2,     labels = c("0-1y", "2-3y", "4-5y", "6-7y", "8-9y", "10-11y", "12-13y", "14-15y", "16-17y"))
-kiggs$schichtz <- factor(kiggs$schichtz, labels = c("low social status", "medium social status", "high social status"))
+kiggs$age2     <- factor(kiggs$age2,     labels = c("0-1y", "2-3y", "4-5y", "6-7y", "8-9y",
+                                                    "10-11y", "12-13y", "14-15y", "16-17y"))
+kiggs$schichtz <- factor(kiggs$schichtz, labels = c("low social status", "medium social status",
+                                                    "high social status"))
 ```
-## Saving the formatted dataframe
+
+> Saving the formatted dataframe
+
 ```{r}
 save(kiggs,file="kiggs.Rda")
 ```
 
-## Checking if the E070M, E070V, E072, E074 variables are factors or not
+***
+
+### Question 3
+
+> Checking if the E070M, E070V, E072, E074 variables are factors or not
+
 ```{r}
 sapply(kiggs[0:4], class)
 ```
-### It's showing that all the variables are factors.
-```{r}
-round(mean(kiggs$arztZ01, na.rm = TRUE),3)
-table(kiggs$arztZ01)
-```
+**It's showing that all the variables are factors now.**
 
-## Setting the value "has not breastfed" of variable E074 to NA for all children
+> Setting the value "has not breastfed" of variable E074 to NA for all children
+
 ```{r}
 levels(kiggs$E074)[levels(kiggs$E074)=="has not breastfed"]<-NA
 ```
-## Deleting this NA factor level from the variable
+> Deleting this NA factor level from the variable
+
 ```{r}
 kiggs <- kiggs[!is.na(kiggs$E074), ]
 ```
 
-## Checking whether these two steps worked as intended
+> Checking whether these two steps worked as intended
+
 ```{r}
 table(is.na(kiggs$E074))
 
 ```
-## Calculating the new variable burdenS and adding to the dataset kiggs
-```{r}
+> Calculating the new variable burdenS and adding to the dataset kiggs
+
+```{r, message=FALSE}
 library(dplyr)
 kiggs$burdenS <- dense_rank(kiggs$E070M)+ dense_rank(kiggs$E070V)+ dense_rank(kiggs$E072)+dense_rank(kiggs$E074)
 table(kiggs$burdenS)
 
 ```
-## We can see from the burdenS values, that the higher value means, the children were exposed to low level of smoking and lower value means a higher level of expose. And we can say that, the number of high level exposed children is verly low compared to the number of low level exposed children.
+**We can see from the burdenS values, that the higher value means, the children were exposed to low level of smoking and lower value means a higher level of expose. And we can say that, the number of high level exposed children is very low compared to the number of low level exposed children.**
 
-## Updating the previous file
+> Updating the previous file
+
 ```{r}
 save(kiggs,file="kiggs.Rda")
 ```
 
-## Calculating absolute frequency tables for age2, sex, burdenS, and mean + standard deviation for arztZ01.
+***
+
+### Question 4
+
+> Calculating absolute frequency tables for age2, sex, burdenS, and mean + standard deviation for arztZ01.
+
 ```{r, results = "asis"}
 library(qwraps2)
 options(qwraps2_markup = "markdown")
@@ -99,28 +133,100 @@ our_summaryx <-
             "11" = ~ qwraps2::n_perc0(burdenS == "11", show_symbol = TRUE, na_rm = TRUE),
             "12" = ~ qwraps2::n_perc0(burdenS == "12", show_symbol = TRUE, na_rm = TRUE)),
       "arztZ01" =
-       list("Mean (SD)" = ~ qwraps2::mean_sd(arztZ01, digits = 3, denote_sd = "paren", na_rm = TRUE, show_n = "never"))
+       list("Mean (SD)" = ~ qwraps2::mean_sd(arztZ01, digits = 3, denote_sd = "paren",
+                                             na_rm = TRUE, show_n = "never"))
      )
 
 qwraps2::summary_table(kiggs, our_summaryx)
 ```
 
+> showing the number of missing values each of these 4 variables has, and how many observations have complete data for these 4 variables
 
 
-## showing the number of missing values each of these 4 variables has, and how many observations have complete data for these 4 variables
+<div align="center">
+<div style="width: 80%; margin:0 left;text-align: left;">
+
+Variable | Missing value count | Complete cases
+-------- | ------------------- | --------------
+age2     | `r sum(is.na(kiggs$age2))` | `r sum(!is.na(kiggs$age2))`
+sex      | `r sum(is.na(kiggs$sex))` | `r sum(!is.na(kiggs$sex))`
+burdenS  | `r sum(is.na(kiggs$burdenS))` | `r sum(!is.na(kiggs$burdenS))`
+arztZ01  | `r sum(is.na(kiggs$arztZ01))` | `r sum(!is.na(kiggs$arztZ01))`
+All Four | `r sum(is.na(kiggs[,c("age2","sex","burdenS","arztZ01"),]))` | `r sum(complete.cases(kiggs[,c("age2","sex","burdenS","arztZ01"),]))`
+
+</div>
+
+***
+
+### Question 5
+
+> Calculating linear regression
 
 ```{r}
-tablex <- matrix(c(sum(is.na(kiggs$age2)),sum(is.na(kiggs$sex)),sum(is.na(kiggs$burdenS)),sum(is.na(kiggs$arztZ01)),sum(!is.na(kiggs$age2)),sum(!is.na(kiggs$sex)),sum(!is.na(kiggs$burdenS)),sum(!is.na(kiggs$arztZ01))),ncol=4,byrow=TRUE)
-colnames(tablex) <- c("age2", "sex", "burdenS", "arztZ01")
-rownames(tablex) <- c("no of missing Values :", "no of completed values : ")
-tx <- as.table(tablex)
-tx
-```
-## Calculating linear regression
-```{r}
-lmx = lm(arztZ01 ~ burdenS + as.numeric(sex) + as.numeric(age2) + as.numeric(schichtz) + as.numeric(e065z), data = kiggs)
-summary(lmx)
+lmx = lm(arztZ01 ~ burdenS + sex + as.numeric(age2) + as.numeric(schichtz) + e065z, data = kiggs)
 ```
 
+* **There are total 5 predictors and they are:** 
+  + **burdenS** *(`r class(kiggs$burdenS)` | It is metric and we take it as it is.)*
+  + **sex** *(`r class(kiggs$sex)` | It is nominal and we take it as a factor as it is.)*
+  + **age2** *(`r class(kiggs$age2)` | It is in factor and we convert it to numeric.)*
+  + **schichtz** *(`r class(kiggs$schichtz)` | It is ordinal and we convert it to numeric.)*
+  + **e065z** *(`r class(kiggs$e065z)` | It is metric and we take it as it is.)*
+
+**Here we have converted *schichtz* and *age2* variables from factor to numerical, and left other variables as they are, because they have more than two factor levels.** 
+
+> The regression coefficient of burdenS
+
+```{r}
+summary(lmx)$coefficients[,1][2]
+```
+**My interpretation :** *The resulting value -0.03135777 as the regression coefficient of burdenS indicates that for each unit of increase in burdenS, the outcome variable arztZ01 will decrease by the value of regression coefficient given that the other variables are held constant.*
+
+> 95% confidence interval for the regression coefficients of burdenS
+
+```{r}
+confint(lmx, level = 0.95)["burdenS",]
+```
+> P-value of the significance test of burdenS
+
+```{r}
+summary(lmx)$coefficients[,4][2]
+```
+> My conclusion
+
+**As we can see the p-value indicates that burdenS does not have a significant effect on the health of children and we cannot reject the null hypothesis as the alpha is smaller than the p-value here. From the regression coefficient we can see that the direction of association is negative although it is not statistically significant at alpha level 0.05 **
+
+> Strategy for accounting the correlation between the indiviudals of the same area.
+
+**We could use mixed logistic regression model as the observations are not independent here.**
+
+***
+
+### Question 6
+
+> Estimating effect size
+
+**After looking at research papers on the effect of maternal smoking on birth weight, it seems that the mothers who used to smoke 10 cigarettes per day, delivered babies weighing on average 96-200g than infants of the nonsmokers. In this case, we can assume an effect size of 0.5 as the effect of maternal smoking is significant.**
+
+* **Some References:**
+  + **Pregnancy, smoking and birth outcomes** *(Ali Delpisheh, Loretta Brabin & Bernard J Brabin)*
+  + **The effect of active and passive maternal smoking before and during pregnancy on neonatal weight at birth** *(Cezary Wojtyła, Paulina Wojtyła-Buciora, Michał Ciebiera, Stanisław Orzechowski & Andrzej Wojtyła)*
+  
+> Choosing appropriate statistical model for the sample size calculation
+
+**Here our main subject is birth weight and we got two groups of data, one who smokes 10 cigarettes a day during pregnancy and other who are nonsmokers. In this type of scenario, we can use paired t-test as we are interested in the difference between two variables for the same subject.**
+
+> Computing minimum necessary sample size
+
+```{r}
+library(pwr)
+resultx <- pwr.t.test(d=0.5, sig.level = 0.05, power = 0.8, type = 'paired')
+resultx
+```
+> My thoughts
+
+**This study has some major weaknesses, as the study is not including environmental effects, gestational age, nutrition level of mothers and other significant areas which can effect the birth weight.**
+
+***
 
 
